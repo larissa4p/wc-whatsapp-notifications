@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       Evolution WhatsApp
- * Plugin URI:        https://github.com/larissa4p/wp-evolution-whatsapp
+ * Plugin URI:        https://github.com/larissa4p/wc-whatsapp-notifications
  * Description:       Notificações WooCommerce e widget de chat via Evolution API (WhatsApp).
  * Version:           1.0.0
  * Author:            Larissa Bessa

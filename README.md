@@ -49,7 +49,7 @@ Configure número, mensagem pré-preenchida, cor, label e posição (inferior di
 
 ```bash
 # Clonar no diretório de plugins do WordPress
-git clone https://github.com/larissa4p/wp-evolution-whatsapp wp-content/plugins/evolution-whatsapp
+git clone https://github.com/larissa4p/wc-whatsapp-notifications wp-content/plugins/evolution-whatsapp
 ```
 
 ## Licença
