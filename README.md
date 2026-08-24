@@ -1,130 +1,43 @@
 # WC WhatsApp Notifications
 
-Plugin WordPress que envia notificações de pedido WooCommerce direto no WhatsApp do cliente — sem depender da API oficial do Meta, sem aprovação de template e sem mensalidade de gateway.
+Plugin que manda notificações de pedido do WooCommerce direto no WhatsApp do cliente. Sem API oficial do Meta, sem aprovação de template, sem pagar por mensagem.
 
-Usa a [Evolution API](https://doc.evolution-api.com/) com o protocolo Baileys (WhatsApp Web), que você mesmo hospeda.
-
----
+Funciona com a [Evolution API](https://doc.evolution-api.com/) (protocolo Baileys), que você hospeda você mesmo.
 
 ## Como funciona
 
-Quando o status de um pedido muda no WooCommerce, o plugin dispara uma mensagem WhatsApp pro número de telefone cadastrado no pedido. Simples assim.
+Pedido muda de status → cliente recebe mensagem no WhatsApp. Cada status tem um template editável no painel do WordPress, com variáveis como `{nome}`, `{pedido}`, `{total}` e `{status}`.
 
-```
-Pedido #42 → status "Processando"
-→ cliente recebe: "Olá, Ana! ✅ Pagamento confirmado. Seu pedido #42 já está sendo preparado."
-```
-
-Cada status tem um template próprio, editável direto no painel do WordPress. As variáveis `{nome}`, `{pedido}`, `{total}`, `{status}` e `{site}` são substituídas automaticamente.
-
-Além das notificações, o plugin inclui um **widget de chat flutuante** — aquele botão de WhatsApp no canto da tela que abre uma conversa com mensagem pré-preenchida.
-
----
+Tem também um widget de botão flutuante pra quem quiser colocar o WhatsApp de contato no site.
 
 ## Requisitos
 
-- WordPress 6.0+
-- PHP 8.0+
-- WooCommerce 7.0+
-- Uma instância da [Evolution API](https://doc.evolution-api.com/) rodando (local ou em servidor)
-
----
+- WordPress 6.0+ / WooCommerce 7.0+ / PHP 8.0+
+- Uma instância da Evolution API rodando
 
 ## Instalação
-
-**Via git** (recomendado pra desenvolvimento):
 
 ```bash
 git clone https://github.com/larissa4p/wc-whatsapp-notifications wp-content/plugins/evolution-whatsapp
 ```
 
-**Manual**: baixe o zip, extraia em `wp-content/plugins/evolution-whatsapp` e ative em **Plugins → Plugins instalados**.
-
----
+Ou baixa o zip e extrai em `wp-content/plugins/evolution-whatsapp`.
 
 ## Configuração
 
-Após ativar, vá em **Configurações → Evolution WhatsApp**.
+Após ativar, vai em **Configurações → Evolution WhatsApp** e preenche a URL da sua instância, a API Key e o nome da instância. O plugin mostra o status da conexão na hora.
 
-### 1. Conexão com a Evolution API
+Cada status do WooCommerce tem um template separado — você ativa/desativa e edita como quiser.
 
-| Campo | O que colocar |
-|---|---|
-| URL da API | Endereço da sua instância. Ex: `http://localhost:8080` |
-| API Key | A chave definida no `docker-compose.yml` ou no painel da Evolution |
-| Nome da instância | O nome exato que você deu à instância ao criar |
+## Subindo a Evolution API com Docker
 
-O plugin mostra o status da conexão em tempo real na própria página de configurações.
+Se ainda não tem uma instância, o mais rápido é via Docker. Tem um `docker-compose.yml` de exemplo no repositório. Depois de subir, acesse `http://localhost:8080/manager` pra conectar via QR Code.
 
-### 2. Templates de mensagem
+## Por que não a API oficial do Meta?
 
-Cada status do WooCommerce tem um template separado com opção de ativar/desativar individualmente. Os templates padrão já estão preenchidos, mas você pode editar livremente.
+Porque ela exige aprovação de conta, aprovação de cada template de mensagem e cobra por conversa. Pra uma loja pequena que só quer avisar que o pedido foi confirmado, não vale a pena.
 
-**Variáveis disponíveis:**
-
-| Variável | Valor |
-|---|---|
-| `{nome}` | Primeiro nome do cliente |
-| `{pedido}` | Número do pedido |
-| `{total}` | Valor total formatado (ex: R$ 129,90) |
-| `{status}` | Nome do status atual |
-| `{site}` | Nome do site |
-
-### 3. Widget de chat
-
-Configure no mesmo painel: número de destino, mensagem pré-preenchida, cor do botão, label e posição (inferior direito ou esquerdo).
-
----
-
-## Rodando a Evolution API localmente com Docker
-
-Se você não tem uma instância da Evolution API ainda, o jeito mais rápido é subir com Docker:
-
-```yaml
-# docker-compose.yml
-services:
-  evolution-postgres:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: evolution
-      POSTGRES_USER: evolution
-      POSTGRES_PASSWORD: evolution123
-    volumes:
-      - evolution_pg_data:/var/lib/postgresql/data
-
-  evolution-api:
-    image: evoapicloud/evolution-api:latest
-    ports:
-      - "8080:8080"
-    environment:
-      DATABASE_CONNECTION_URI: postgresql://evolution:evolution123@evolution-postgres:5432/evolution
-      DATABASE_CONNECTION_CLIENT_NAME: evolution_exchange
-      AUTHENTICATION_API_KEY: sua-chave-aqui
-      LOG_LEVEL: error
-    depends_on:
-      - evolution-postgres
-
-volumes:
-  evolution_pg_data:
-```
-
-```bash
-docker compose up -d
-```
-
-A API fica disponível em `http://localhost:8080`. Acesse o painel em `http://localhost:8080/manager` pra criar e conectar a instância via QR Code.
-
----
-
-## Por que Evolution API e não a API oficial do Meta?
-
-A API oficial do WhatsApp Business exige aprovação de conta, aprovação de templates de mensagem e cobra por conversa iniciada. Pra pequenas lojas que só querem avisar o cliente que o pedido foi confirmado, isso é burocracia demais.
-
-A Evolution API usa o protocolo Baileys (WhatsApp Web) — você conecta um número comum via QR Code e manda mensagens normalmente, como se fosse pelo celular. Sem aprovação, sem template pré-cadastrado, sem custo por mensagem.
-
-A contrapartida: você precisa hospedar a instância. Um VPS de R$ 25/mês ou serviços como Railway e Render resolvem.
-
----
+A Evolution API conecta um número normal via QR Code — funciona como o WhatsApp Web. Você precisa hospedar a instância, mas um VPS barato ou Railway resolvem.
 
 ## Licença
 
