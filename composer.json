@@ -1,0 +1,13 @@
+{
+    "name": "larissa4p/evolution-whatsapp",
+    "description": "WooCommerce WhatsApp notifications and chat widget via Evolution API",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0+",
+    "authors": [{ "name": "Larissa Bessa", "homepage": "https://github.com/larissa4p" }],
+    "require-dev": {
+        "phpunit/phpunit": "^10"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit --testdox"
+    }
+}
